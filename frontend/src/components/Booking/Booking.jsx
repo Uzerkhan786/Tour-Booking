@@ -22,6 +22,7 @@ const Booking = ({ tour, avgRating }) => {
       bookAt: ''
    })
 
+
    const handleChange = e => {
       setBooking(prev => ({ ...prev, [e.target.id]: e.target.value }))
    }
@@ -43,7 +44,6 @@ const Booking = ({ tour, avgRating }) => {
             headers: {
                'content-type': 'application/json'
             },
-            credentials: 'include',
             body: JSON.stringify(booking)
          })
 
