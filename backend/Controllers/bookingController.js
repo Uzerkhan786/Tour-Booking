@@ -3,8 +3,6 @@ import Booking from './../models/Booking.js'
 
 // create new booking
 export const createBooking = async(req,res) => {
-   
-
    try {
       const savedBooking = await Booking.create(req.body);
 
