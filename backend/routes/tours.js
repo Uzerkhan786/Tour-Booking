@@ -18,7 +18,7 @@ const router = express.Router()
 router.post('/', uploadStorage.single("photo"), createTour)
 
 //Update tour 
-router.put('/:id', verifyAdmin, updateTour)
+router.put('/:id', updateTour)
 
 //Delete tour 
 router.delete('/:id', deleteTour)

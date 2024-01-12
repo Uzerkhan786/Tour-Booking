@@ -3,10 +3,10 @@ import Booking from './../models/Booking.js'
 
 // create new booking
 export const createBooking = async(req,res) => {
-   const newBooking = new Booking(req.body)
+   
 
    try {
-      const savedBooking = await newBooking.save()
+      const savedBooking = await Booking.create(req.body);
 
       res.status(200).json({success:true, message:"Your tour is booked!", data:savedBooking})
    } catch (error) {
@@ -33,6 +33,7 @@ export const getAllBooking = async(req,res) => {
    
    try {
       const books = await Booking.find()
+      console.log(books);
 
       res.status(200).json({success:true, message:"Successful!", data:books})
    } catch (error) {
