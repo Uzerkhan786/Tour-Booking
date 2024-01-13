@@ -8,17 +8,18 @@ import Newsletter from './../shared/Newsletter'
 import { Col, Container, Row } from 'reactstrap'
 import useFetch from '../hooks/useFetch'
 import { BASE_URL } from '../utils/config'
-
+import Loading from '../components/Loader/Loading'
 
 const Tours = () => {
    const [pageCount, setPageCount] = useState(0)
    const [page, setPage] = useState(0)
-
+   const [load,setLoad]=useState(false)
    const { data: tours, loading, error } = useFetch(`${BASE_URL}/tours?page=${page}`)
    const { data: tourCount } = useFetch(`${BASE_URL}/tours/search/getTourCount`)
-
+   
    useEffect(() => {
       const pages = Math.ceil(tourCount / 8)
+      setLoad(true)
       setPageCount(pages)
       window.scrollTo(0,0)
    }, [page, tourCount, tours])
@@ -36,11 +37,9 @@ const Tours = () => {
 
          <section className='pt-0'>
             <Container>
-               {loading && <h4 className='text-center pt-5'>LOADING..........</h4>}
-               {error && <h4 className='text-center pt-5'>{error}</h4>}
-               {
-                  !loading && !error &&
-                  <Row>
+              
+             
+               {!load?(<div ><Loading/></div>):(<Row>
                      {
                         tours?.map(tour => (<Col lg='3' md='6' sm='6' className='mb-4' key={tour._id}> <TourCard tour={tour} /> </Col>))
                      }
@@ -56,7 +55,8 @@ const Tours = () => {
                            ))}
                         </div>
                      </Col>
-                  </Row>
+                  </Row>)
+                  
                }
             </Container>
          </section>

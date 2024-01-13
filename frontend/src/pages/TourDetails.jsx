@@ -10,6 +10,7 @@ import Newsletter from '../shared/Newsletter'
 import useFetch from '../hooks/useFetch'
 import { BASE_URL ,URL} from '../utils/config'
 import { AuthContext } from '../context/AuthContext'
+import Loading from '../components/Loader/Loading'
 
 const TourDetails = () => {
    const { id } = useParams()
@@ -40,7 +41,7 @@ const TourDetails = () => {
             method: 'POST',
             body: JSON.stringify({
                productId:id,
-               username:'uzer',
+               username:user.username,
                reviewText:review.reviewText,
                rating:tourRating
             }),
@@ -69,10 +70,11 @@ const TourDetails = () => {
    return (
       <section>
          <Container>
-            {loading && <h4 className='text-center pt-5'>LOADING.........</h4>}
+           
             {error && <h4 className='text-center pt-5'>{error}</h4>}
             {
-               !loading && !error &&
+               loading?(<Loading/>):(
+                  !loading && !error &&
                <Row>
                   <Col lg='8'>
                      <div className="tour__content">
@@ -154,6 +156,8 @@ const TourDetails = () => {
                      <Booking tour={tour} avgRating={avgRating} />
                   </Col>
                </Row>
+               )
+               
             }
          </Container>
          <Newsletter />

@@ -9,6 +9,7 @@ import TourDetails from './../pages/TourDetails'
 import Tours from './../pages/Tours'
 import Image from './Image'
 import TourCreate from '../pages/TourCreate'
+import Loading from '../components/Loader/Loading'
 
 const Routers = () => {
    return (
@@ -24,6 +25,7 @@ const Routers = () => {
          <Route path='/thank-you' element={<ThankYou/>} />
          <Route path='image' element={<Image/>}/>
          <Route path='/tours/search' element={<SearchResultList/>} />
+         <Route path='/loading' element={<Loading/>}/>
       </Routes>
    )
 }
