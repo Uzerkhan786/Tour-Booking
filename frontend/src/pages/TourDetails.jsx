@@ -8,14 +8,16 @@ import avatar from '../assets/images/avatar.jpg'
 import Booking from '../components/Booking/Booking'
 import Newsletter from '../shared/Newsletter'
 import useFetch from '../hooks/useFetch'
-import { BASE_URL } from '../utils/config'
+import { BASE_URL ,URL} from '../utils/config'
 import { AuthContext } from '../context/AuthContext'
 
 const TourDetails = () => {
    const { id } = useParams()
-   const reviewMsgRef = useRef('')
    const [tourRating, setTourRating] = useState(null)
    const { user } = useContext(AuthContext)
+   const[review,setReview]=useState({
+      reviewText:''
+   })
 
    // fetch data from database
    const { data: tour, loading, error } = useFetch(`${BASE_URL}/tours/${id}`)
@@ -26,28 +28,26 @@ const TourDetails = () => {
 
    const options = { day: 'numeric', month: 'long', year: 'numeric' }
 
-   const submitHandler = async e => {
+   const submitHandler = async(e) => {
       e.preventDefault()
-      const reviewText = reviewMsgRef.current.value
-
       try {
          if (!user || user === undefined || user === null) {
             alert('Please sign in')
          }
-         const reviewObj = {
-            username: user?.username,
-            reviewText,
-            rating: tourRating
-         }
-
+        //console.log(id);
+       
          const res = await fetch(`${BASE_URL}/review/${id}`, {
-            method: 'post',
+            method: 'POST',
+            body: JSON.stringify({
+               productId:id,
+               username:'uzer',
+               reviewText:review.reviewText,
+               rating:tourRating
+            }),
             headers: {
-               'content-type': 'application/json'
-            },
-            body: JSON.stringify(reviewObj)
+               "Content-type": "application/json; charset=UTF-8"
+            }
          })
-
          const result = await res.json()
          if (!res.ok) {
             return alert(result.message)
@@ -62,6 +62,10 @@ const TourDetails = () => {
       window.scrollTo(0, 0)
    }, [tour])
 
+   const reviewInput=(e)=>{
+      setReview({...review,[e.target.name]:e.target.value})
+   }
+
    return (
       <section>
          <Container>
@@ -72,7 +76,7 @@ const TourDetails = () => {
                <Row>
                   <Col lg='8'>
                      <div className="tour__content">
-                        <img src={`${BASE_URL}/images/${photo}`} alt="" />
+                        <img src={`${URL}/images/${photo}`} alt="" />
 
                         <div className="tour__info">
                            <h2>{title}</h2>
@@ -101,15 +105,16 @@ const TourDetails = () => {
 
                            <Form onSubmit={submitHandler}>
                               <div className="d-flex align-items-center gap-3 mb-4 rating__group">
-                                 <span onClick={() => setTourRating(1)}>1 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(2)}>2 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(3)}>3 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(4)}>4 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(5)}>5 <i class='ri-star-s-fill'></i></span>
+                                 <span name='rating' onClick={() => setTourRating(1)} onChange={reviewInput}>1 <i class='ri-star-s-fill'></i></span>
+                                 <span name='rating'onClick={() => setTourRating(2)} onChange={reviewInput}>2 <i class='ri-star-s-fill'></i></span>
+                                 <span name='rating'onClick={() => setTourRating(3)} onChange={reviewInput}>3 <i class='ri-star-s-fill'></i></span>
+                                 <span name='rating'onClick={() => setTourRating(4)} onChange={reviewInput}>4 <i class='ri-star-s-fill'></i></span>
+                                 <span name='rating' onClick={() => setTourRating(5)} onChange={reviewInput}>5 <i class='ri-star-s-fill'></i></span>
+                                 
                               </div>
 
                               <div className="review__input">
-                                 <input type="text" ref={reviewMsgRef} placeholder='share your thoughts' required />
+                                 <input type="text" name='reviewText'  placeholder='share your thoughts' onChange={reviewInput} />
                                  <button className='btn primary__btn text-white' type='submit'>
                                     Submit
                                  </button>
