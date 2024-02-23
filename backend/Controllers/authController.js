@@ -9,16 +9,21 @@ export const register = async (req, res) => {
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync(req.body.password, salt)
 
-      const newUser = new User({
+      // const newUser = await new User({
+      //    username: req.body.username,
+      //    email: req.body.email,
+      //    password: hash,
+      //    photo: req.body.photo
+      // })
+      const newUser = await User.create({
          username: req.body.username,
          email: req.body.email,
          password: hash,
-         photo: req.body.photo
       })
 
-      await newUser.save()
+      //await newUser.save()
 
-      res.status(200).json({ success: true, message: "Successfully created!" })
+      res.status(200).json({ success: true, message: "Successfully created!", data: newUser })
    } catch (error) {
       res.status(500).json({ success: false, message: "Failed to create! Try again." })
    }
@@ -46,13 +51,13 @@ export const login = async (req, res) => {
       const { password, role, ...rest } = user._doc
 
       // create jwt token
-      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn:"15d" })
+      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "15d" })
 
       // set token in the browser cookies and send the response to the client
       res.cookie('accessToken', token, {
          httpOnly: true,
          expires: token.expiresIn
-      }).status(200).json({token, data:{...rest}, role})
+      }).status(200).json({ token, data: { ...rest }, role })
    } catch (error) {
       res.status(500).json({ susccess: false, message: "Failed to login" })
    }
